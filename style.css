@@ -1,0 +1,240 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --bg-primary: #0a0a1a;
+  --bg-secondary: #121226;
+  --card-bg-start: rgba(25, 25, 50, 0.6);
+  --card-bg-end: rgba(15, 15, 30, 0.6);
+  --border-color: rgba(255, 255, 255, 0.15);
+  --text-primary: #e0e0f0;
+  --text-secondary: #a0a0c0;
+  --accent-blue: #5080e0;
+  --accent-green: #40e0a0;
+  --accent-yellow: #f0e050;
+  --accent-red: #e05050;
+  --font-family: 'Poppins', sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: var(--font-family);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  text-align: center;
+  padding: 3rem 1rem 2rem;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+header h1 {
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+.header-icon { font-size: 2.5rem; }
+header p { color: var(--text-secondary); font-size: 1rem; font-weight: 300; }
+
+main { flex-grow: 1; padding: 2rem; display: flex; justify-content: center; }
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-areas:
+    "map map insights"
+    "climate green water-res"
+    "sustain infra mobility"
+    "waste waste waste";
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 1500px;
+}
+
+.card {
+  background: linear-gradient(135deg, var(--card-bg-start), var(--card-bg-end));
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.37);
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 48px rgba(0,0,0,0.5);
+}
+.card-header { margin-bottom: 1.5rem; }
+.card h2 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--accent-yellow);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.subtitle { margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-secondary); font-weight: 300; }
+
+.analysis-text { margin-top: 1rem; font-weight: 500; color: var(--accent-green); min-height: 1.5rem; }
+.analysis-text.warning { color: var(--accent-yellow); }
+.analysis-text.critical { color: var(--accent-red); }
+
+/* Grid areas */
+.card--map { grid-area: map; }
+.card--insights { grid-area: insights; }
+.card--climate { grid-area: climate; }
+.card--green { grid-area: green; }
+.card--water-res { grid-area: water-res; }
+.card--infra { grid-area: infra; }
+.card--mobility { grid-area: mobility; }
+.card--sustain { grid-area: sustain; }
+.card--waste { grid-area: waste; }
+
+.map-container {
+  height: 450px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+}
+
+/* Controls */
+.index-controls, .climate-controls, .infra-controls, .mobility-controls { margin-bottom: 1.5rem; }
+.index-buttons { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1rem; }
+.index-buttons button {
+  padding: 0.75rem 1.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: 30px;
+  background: rgba(255,255,255,0.05);
+  color: var(--text-primary);
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s, color 0.3s, border-color 0.3s;
+}
+.index-buttons button:hover { background: rgba(255,255,255,0.15); transform: translateY(-3px); }
+.index-buttons button.active {
+  background: var(--accent-blue);
+  border-color: var(--accent-blue);
+  color: white;
+}
+
+.climate-controls label, .mobility-controls label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
+
+input[type="range"] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 8px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 4px;
+  outline: none;
+  margin-top: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px; height: 18px; border-radius: 50%;
+  background: var(--accent-blue); cursor: pointer; border: 2px solid var(--text-primary);
+}
+
+#infraType {
+  width: 100%; padding: 0.75rem; border-radius: 8px;
+  background: rgba(255,255,255,0.05); border: 1px solid var(--border-color);
+  color: var(--text-primary); font-family: var(--font-family);
+}
+
+.climate-prediction-info, .infra-prediction-info {
+  padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 10px;
+}
+.climate-prediction-info h3, .infra-prediction-info h3 {
+  font-size: 1.2rem; margin-bottom: 0.5rem; font-weight: 600; color: var(--accent-green);
+}
+.climate-prediction-info h3.warning { color: var(--accent-yellow); }
+.climate-prediction-info h3.critical { color: var(--accent-red); }
+
+/* Sustainability Gauge */
+.gauge-container { position: relative; width: 100%; max-width: 250px; margin: 1.5rem auto; }
+#sustainabilityGauge { height: 200px !important; }
+.score-text {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%,-50%); font-size: 1.5rem; font-weight: 600; color: var(--text-primary);
+  text-align: center;
+}
+
+/* Chart styling */
+canvas { max-width: 100%; height: 250px !important; }
+.card--insights canvas { height: 350px !important; }
+/* Make the Waste chart smaller/moderate so it doesn't look huge */
+#wasteChart { height: 200px !important; }
+
+/* Footer */
+footer { text-align: center; padding: 1.5rem; background: var(--bg-secondary); border-top: 1px solid rgba(255,255,255,0.1); color: var(--text-secondary); font-size: 0.8rem; }
+
+/* Small button */
+.small-btn {
+  display: inline-block; margin-top: 0.75rem; padding: 0.5rem 0.75rem; border-radius: 8px;
+  border: 1px solid var(--border-color); background: rgba(255,255,255,0.03); color: var(--text-primary);
+  cursor: pointer; font-size: 0.9rem;
+}
+.small-btn:hover { background: rgba(255,255,255,0.06); }
+
+/* Map controls row */
+.map-controls { margin-top: 0.75rem; display:flex; gap: 0.5rem; flex-wrap:wrap; }
+
+/* Chart action row */
+.chart-actions { margin-bottom: 0.75rem; }
+
+/* Waste Management styles */
+.waste-controls { margin-bottom: 1rem; }
+.waste-controls label { display:block; margin-bottom:0.5rem; font-weight:500; }
+.progress-meter {
+  width: 100%;
+  height: 14px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-green), var(--accent-blue));
+  transition: width 0.5s ease;
+}
+
+/* If you want to maintain grid consistency, update the grid-template-areas in style.css 
+   to include "waste" where you'd like it placed (done above). */
+
+@media (max-width: 1200px) {
+  .dashboard-grid {
+    grid-template-areas:
+      "map map"
+      "insights insights"
+      "climate green"
+      "water-res infra"
+      "mobility sustain"
+      "waste waste";
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 768px) {
+  .dashboard-grid {
+    grid-template-areas:
+      "map"
+      "insights"
+      "climate"
+      "green"
+      "water-res"
+      "infra"
+      "mobility"
+      "sustain"
+      "waste";
+    grid-template-columns: 1fr;
+  }
+  .card { padding: 1.5rem; }
+}

@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Metroscape - Urban Planning Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+</head>
+<body>
+  <header>
+    <h1><span class="header-icon">🌎</span> Metroscape</h1>
+    <p>A Unified Urban Planning Dashboard</p>
+  </header>
+
+  <main>
+    <div class="dashboard-grid">
+
+      <div class="card card--map">
+        <div class="card-header">
+          <h2><span class="header-icon">📍</span> Urban Tracker</h2>
+          <p class="subtitle">Real-time hotspots & environmental layers.</p>
+        </div>
+        <div id="map" class="map-container" role="application" aria-label="Interactive map"></div>
+        <div class="map-controls">
+          <button id="toggleGibsBtn" class="small-btn">Toggle NASA GIBS (satellite/NDVI)</button>
+          <button id="exportMapPNG" class="small-btn" title="Export map view as image">Export Map (PNG)</button>
+        </div>
+      </div>
+
+      <div class="card card--insights">
+        <div class="card-header">
+          <h2><span class="header-icon">📈</span> City Health Indexes</h2>
+          <p class="subtitle">Analyze key environmental and human health metrics over time.</p>
+        </div>
+        <div class="index-controls">
+          <div class="index-buttons" role="tablist" aria-label="Choose index">
+            <button data-index="air" role="tab">Air Quality</button>
+            <button data-index="water" role="tab">Water Purity</button>
+            <button data-index="noise" role="tab">Noise Levels</button>
+            <button data-index="human" role="tab">Human Health</button>
+          </div>
+          <p id="indexAnalysis" class="analysis-text" aria-live="polite"></p>
+        </div>
+        <div class="chart-actions">
+          <button id="downloadInsights" class="small-btn">Download Chart</button>
+        </div>
+        <canvas id="insightsChart" aria-label="City health indexes chart"></canvas>
+      </div>
+
+      <div class="card card--climate">
+        <div class="card-header">
+          <h2><span class="header-icon">🌡️</span> Climate Resilience</h2>
+          <p class="subtitle">Simulate future climate impacts on urban systems.</p>
+        </div>
+        <div class="climate-controls">
+          <label for="temp-slider">Temperature Anomaly: <span id="tempValue">0°C</span></label>
+          <input type="range" id="temp-slider" min="-5" max="5" value="0" step="0.5" aria-label="Temperature anomaly" />
+          <label for="rainfall-slider">Rainfall Increase: <span id="rainfallValue">0%</span></label>
+          <input type="range" id="rainfall-slider" min="0" max="100" value="0" aria-label="Rainfall increase" />
+        </div>
+        <div class="climate-prediction-info">
+          <h3 id="climateTitle"></h3>
+          <p id="climateMessage"></p>
+        </div>
+      </div>
+
+      <div class="card card--green">
+        <div class="card-header">
+          <h2><span class="header-icon">🌳</span> Green Spaces Health</h2>
+          <p class="subtitle">Monitor green cover health and its role in resilience.</p>
+        </div>
+        <div class="chart-actions">
+          <button id="downloadGreen" class="small-btn">Download Chart</button>
+        </div>
+        <canvas id="greenChart" aria-label="Green cover chart"></canvas>
+        <p id="greenAnalysis" class="analysis-text"></p>
+      </div>
+
+      <div class="card card--water-res">
+        <div class="card-header">
+          <h2><span class="header-icon">💧</span> Water Resource Management</h2>
+          <p class="subtitle">Track reservoir levels and water stress.</p>
+        </div>
+        <div class="chart-actions">
+          <button id="downloadWater" class="small-btn">Download Chart</button>
+        </div>
+        <canvas id="waterResChart" aria-label="Water reservoirs chart"></canvas>
+        <p id="waterResAnalysis" class="analysis-text"></p>
+      </div>
+
+      <div class="card card--infra">
+        <div class="card-header">
+          <h2><span class="header-icon">🏗️</span> Infrastructure Impact Analysis</h2>
+          <p class="subtitle">Model resilience of new projects to climate factors.</p>
+        </div>
+        <div class="infra-controls">
+          <label for="infraType">Project Type:</label>
+          <select id="infraType" aria-label="Select project type">
+            <option value="residential">Residential</option>
+            <option value="commercial">Commercial</option>
+            <option value="transport">Transport Hub</option>
+          </select>
+        </div>
+        <div class="infra-prediction-info">
+          <h3 id="infraTitle"></h3>
+          <p id="infraMessage"></p>
+        </div>
+      </div>
+
+      <div class="card card--mobility">
+        <div class="card-header">
+          <h2><span class="header-icon">🚗</span> Mobility & Air Quality</h2>
+          <p class="subtitle">Analyze traffic impact on air pollution.</p>
+        </div>
+        <div class="mobility-controls">
+          <label for="traffic-slider">Traffic Density: <span id="trafficValue">50%</span></label>
+          <input type="range" id="traffic-slider" min="0" max="100" value="50" aria-label="Traffic density" />
+          <label for="ev-slider">EV Adoption: <span id="evValue">10%</span></label>
+          <input type="range" id="ev-slider" min="0" max="100" value="10" aria-label="EV adoption" />
+        </div>
+        <div class="chart-actions">
+          <button id="downloadMobility" class="small-btn">Download Chart</button>
+        </div>
+        <canvas id="mobilityChart" aria-label="Mobility chart"></canvas>
+      </div>
+
+      <div class="card card--sustain">
+        <div class="card-header">
+          <h2><span class="header-icon">✨</span> City Sustainability Score</h2>
+          <p class="subtitle">A holistic measure of urban resilience.</p>
+        </div>
+        <div class="gauge-container">
+          <canvas id="sustainabilityGauge" aria-label="Sustainability gauge"></canvas>
+          <p id="sustainabilityText" class="score-text"></p>
+        </div>
+      </div>
+
+      <div class="card card--waste">
+        <div class="card-header">
+          <h2><span class="header-icon">🚮</span> Waste Management & Policy</h2>
+          <p class="subtitle">Simulate waste streams and landfill lifespan based on policy.</p>
+        </div>
+
+        <div class="waste-controls">
+          <label for="pop-growth-slider">Population Growth Rate: <span id="popGrowthValue">1%</span></label>
+          <input type="range" id="pop-growth-slider" min="0" max="3" value="1" step="0.1" aria-label="Population growth rate" />
+          <label for="economic-index-slider">Economic Activity Index: <span id="economicIndexValue">1.0x</span></label>
+          <input type="range" id="economic-index-slider" min="0.5" max="2.0" value="1.0" step="0.1" aria-label="Economic activity index" />
+          <label for="policy-effectiveness-slider">Policy Effectiveness: <span id="policyEffectivenessValue">50%</span></label>
+          <input type="range" id="policy-effectiveness-slider" min="0" max="100" value="50" aria-label="Policy effectiveness" />
+          <label for="landfill-cost-slider">Landfill Cost/Ton: <span id="landfillCostValue">$50</span></label>
+          <input type="range" id="landfill-cost-slider" min="10" max="200" value="50" step="10" aria-label="Landfill cost per ton" />
+        </div>
+
+        <div class="landfill-status">
+          <label>Projected Landfill Lifespan</label>
+          <div class="progress-meter" aria-hidden="true">
+            <div id="landfillBar" class="progress-fill" style="width:50%"></div>
+          </div>
+          <p id="landfillYears" class="analysis-text" style="margin-top:0.5rem;"></p>
+          <p id="landfillMessage" class="analysis-text" style="margin-top:0.25rem;"></p>
+        </div>
+
+        <div class="chart-actions">
+          <button id="downloadWaste" class="small-btn">Download Chart</button>
+          <button id="exportWasteCSV" class="small-btn">Export CSV</button>
+        </div>
+
+        <canvas id="wasteChart" aria-label="Waste generation and recycling chart"></canvas>
+        <p id="wasteAnalysis" class="analysis-text"></p>
+      </div>
+
+    </div>
+  </main>
+
+  <footer>
+    <p>A project by Metroscape Initiative | Powered by NASA Earth Observation Data</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
